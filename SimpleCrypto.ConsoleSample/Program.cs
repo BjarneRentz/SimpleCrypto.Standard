@@ -7,7 +7,7 @@ namespace SimpleCrypto.ConsoleSample
     [Verb("compute", HelpText = "Compute hash value of plaintext")]
     public class ComputeOptions
     {
-        [Option(Required = true, HelpText = "Plaintext to be hashed")]
+        [Value(0, Required = true, HelpText = "Plaintext to be hashed")]
         public string Plaintext { get; set; }
 
         [Option(HelpText = "Salt to use for hashing")]
