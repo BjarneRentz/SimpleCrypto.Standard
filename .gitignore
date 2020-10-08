@@ -4,3 +4,10 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 .idea/
+/.vs/slnx.sqlite
+/.vs/SimpleCrypto.Standard/v16/Server/sqlite3/storage.ide-wal
+/.vs/SimpleCrypto.Standard/v16/Server/sqlite3/storage.ide-shm
+/.vs/SimpleCrypto.Standard/v16/Server/sqlite3/storage.ide
+/.vs/SimpleCrypto.Standard/v16/Server/sqlite3/db.lock
+/.vs/SimpleCrypto.Standard/v16/.suo
+/.vs/ProjectSettings.json
