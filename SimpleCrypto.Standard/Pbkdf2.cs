@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using SimpleCrypto.Standard.Interfaces;
@@ -100,6 +101,7 @@ namespace SimpleCrypto.Standard
 
         }
 
+        [MethodImpl(MethodImplOptions.NoOptimization)]
         public bool Compare(string passwordHash1, string passwordHash2)
         {
             if (string.IsNullOrEmpty(passwordHash1) || string.IsNullOrEmpty(passwordHash2))
@@ -108,10 +110,10 @@ namespace SimpleCrypto.Standard
             if (passwordHash1.Length != passwordHash2.Length)
                 return false;
 
-            int minLength = Math.Min(passwordHash1.Length, passwordHash2.Length);
+            
             int result = 0;
 
-            for (int i = 0; i < minLength; i++)
+            for (int i = 0; i < passwordHash1.Length; i++)
                 result |= passwordHash1[i] ^ passwordHash2[i];
 
             return 0 == result;
