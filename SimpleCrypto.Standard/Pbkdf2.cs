@@ -105,6 +105,9 @@ namespace SimpleCrypto.Standard
             if (string.IsNullOrEmpty(passwordHash1) || string.IsNullOrEmpty(passwordHash2))
                 return false;
 
+            if (passwordHash1.Length != passwordHash2.Length)
+                return false;
+
             int minLength = Math.Min(passwordHash1.Length, passwordHash2.Length);
             int result = 0;
 
