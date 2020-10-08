@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleCrypto.Standard;
 
@@ -71,6 +72,51 @@ namespace SimpleCrypto.Tests
         }
         
 
+        #endregion
+        
+        #region [GenerateSalt]
+        
+        [TestMethod]
+        public void GenerateSalt_Ok()
+        {
+            var pbkdf2 = new Pbkdf2 {PlainText = "Test", Salt = "100A00.Random"};
+
+            var salt = pbkdf2.GenerateSalt();
+
+            Assert.AreEqual(pbkdf2.Salt, salt);
+            Assert.IsTrue(new Regex($@"^{pbkdf2.HashIterations}\..+$").IsMatch(salt));
+        }
+
+        /// <summary>
+        /// Ensures a <see cref="InvalidOperationException"/> gets thrown when the salt size is less than 1.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void GenerateSalt_SaltSizeIsLessThanOne()
+        {
+            var pbkdf2 = new Pbkdf2 {PlainText = "Test", SaltSize = 0};
+
+            pbkdf2.GenerateSalt();
+
+            Assert.Fail();
+        }
+
+        /// <summary>
+        /// Ensures <see cref="IPbkdf2.HashInterations"/> and <<see cref="IPbkdf2.SaltSize"/> are set with arguments.
+        /// </summary>
+        [TestMethod]
+        public void GenerateSalt_OkWithArguments()
+        {
+            var pbkdf2 = new Pbkdf2 {PlainText = "Test"};
+
+            var salt = pbkdf2.GenerateSalt(42, 16);
+            
+            Assert.AreEqual(42, pbkdf2.HashIterations);
+            Assert.AreEqual(16, pbkdf2.SaltSize);
+            Assert.AreEqual(pbkdf2.Salt, salt);
+            Assert.IsTrue(new Regex(@"^42\.").IsMatch(salt));
+        }
+        
         #endregion
     }
 }
