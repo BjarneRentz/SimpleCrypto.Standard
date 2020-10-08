@@ -16,6 +16,7 @@ namespace SimpleCrypto.Standard
         {
             this.SaltSize = 16;
             this.HashIterations = 400000;
+            this.HashSize = 20;
         }
 
         
@@ -24,6 +25,7 @@ namespace SimpleCrypto.Standard
         public string PlainText { get; set; }
         public string HashedText { get; private set; }
         public string Salt { get; set; }
+        public int HashSize { get; set;  }
         
         public string Compute()
         {
@@ -37,7 +39,7 @@ namespace SimpleCrypto.Standard
             byte[] saltBytes = Encoding.UTF8.GetBytes(Salt);
 
             var pbkdf2 = new Rfc2898DeriveBytes(PlainText, saltBytes, HashIterations);
-            var key = pbkdf2.GetBytes(64);
+            var key = pbkdf2.GetBytes(HashSize);
             
             HashedText = Convert.ToBase64String(key);
 
