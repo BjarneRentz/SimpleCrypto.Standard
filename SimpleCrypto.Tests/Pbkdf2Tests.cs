@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleCrypto.Standard;
 
@@ -70,6 +70,35 @@ namespace SimpleCrypto.Tests
             Assert.Fail();
         }
         
+        [DataTestMethod]
+        [DataRow("passwordHash","passwordHash")]
+        [DataRow("","")]
+        [DataRow(null,null)]
+        [DataRow("$","$")]
+        [DataRow("汉字", "汉字")]
+        public void Compare_ShouldReturnTrue(string passwordHash1, string passwordHash2)
+        {
+            var pbkdf2 = new Pbkdf2();
+
+            var result = pbkdf2.Compare(passwordHash1, passwordHash2);
+
+            Assert.IsTrue(result);
+        }
+
+        [DataTestMethod]
+        [DataRow("passwordHash1", "passwordHash2")]
+        [DataRow("Hello", "Hello World")]
+        [DataRow("PasswordHash", null)]
+        [DataRow("PasswordHash", "")]
+        [DataRow("汉字", "$")]
+        public void Compare_ShouldReturnFalse(string passwordHash1, string passwordHash2)
+        {
+            var pbkdf2 = new Pbkdf2();
+
+            var result = pbkdf2.Compare(passwordHash1, passwordHash2);
+
+            Assert.IsFalse(result);
+        }
 
         #endregion
     }
