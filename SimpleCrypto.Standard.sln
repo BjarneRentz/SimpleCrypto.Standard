@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCrypto.Standard", "SimpleCrypto.Standard\SimpleCrypto.Standard.csproj", "{0FDF3A4D-A1AD-493C-ABAD-9AE24C28DB58}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCrypto.Tests", "SimpleCrypto.Tests\SimpleCrypto.Tests.csproj", "{99C0C4A6-CD33-4A6A-A7E8-81F1B99E9647}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{0FDF3A4D-A1AD-493C-ABAD-9AE24C28DB58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FDF3A4D-A1AD-493C-ABAD-9AE24C28DB58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FDF3A4D-A1AD-493C-ABAD-9AE24C28DB58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99C0C4A6-CD33-4A6A-A7E8-81F1B99E9647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99C0C4A6-CD33-4A6A-A7E8-81F1B99E9647}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99C0C4A6-CD33-4A6A-A7E8-81F1B99E9647}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99C0C4A6-CD33-4A6A-A7E8-81F1B99E9647}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
