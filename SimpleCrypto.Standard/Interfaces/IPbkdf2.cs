@@ -13,7 +13,7 @@ namespace SimpleCrypto.Standard.Interfaces
         int HashIterations { get; set; }
 
         /// <summary>
-        /// Size of the <see cref="Salt"/> if no salt is set.
+        /// Size of the <see cref="Salt"/> in Bytes if no salt is set.
         /// </summary>
         int SaltSize { get; set; }
 
@@ -75,6 +75,7 @@ namespace SimpleCrypto.Standard.Interfaces
         /// <param name="hashIterations">The hash iterations used to compute the hash.</param>
         /// <param name="saltSize">The size of the salt</param>
         /// <returns>The generated salt</returns>
+        /// <exception cref="InvalidOperationException">Salt size is lower than 1.</exception>
         string GenerateSalt(int hashIterations, int saltSize);
 
         /// <summary>
