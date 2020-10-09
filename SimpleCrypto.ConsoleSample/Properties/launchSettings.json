@@ -1,8 +1,7 @@
 {
   "profiles": {
     "SimpleCrypto.ConsoleSample": {
-      "commandName": "Project",
-      "commandLineArgs": "compute \"This is my plaintext\""
+      "commandName": "Project"
     }
   }
 }

@@ -1,44 +1,49 @@
 ﻿using System;
-using CommandLine;
 using SimpleCrypto.Standard;
 
 namespace SimpleCrypto.ConsoleSample
 {
-    [Verb("compute", HelpText = "Compute hash value of plaintext")]
-    public class ComputeOptions
-    {
-        [Value(0, Required = true, HelpText = "Plaintext to be hashed")]
-        public string Plaintext { get; set; }
-
-        [Option(HelpText = "Salt to use for hashing")]
-        public string Salt { get; set; }
-    }
 
     public class Program
     {
-        public static int Main(string[] args)
+        public static void Main(string[] args)
         {
-            return CommandLine.Parser.Default.ParseArguments<ComputeOptions>(args)
-                .MapResult(
-                    (ComputeOptions opts) => RunCompute(opts),
-                    errs => 1);
-        }
+            const string SALT = "987654.Random";
+            const int SALT_SIZE = 13;
+            const int HASH_ITERATIONS = 123456;
 
-        private static int RunCompute(ComputeOptions options)
-        {
-            var pbkdf2 = new Pbkdf2 { PlainText = options.Plaintext };
-            Console.WriteLine($"Plain Text: {options.Plaintext}");
+            Pbkdf2 pbkdf2;
+            string hashedText;
 
-            if (!string.IsNullOrWhiteSpace(options.Salt))
-            {
-                pbkdf2.Salt = options.Salt;
-                Console.WriteLine($"Salt: {options.Salt}");
-            }
+            Console.WriteLine("Example 1: calling Compute()");
+            pbkdf2 = new Pbkdf2 { PlainText = "Example 1"};
+            hashedText = pbkdf2.Compute();
+            Console.WriteLine($"  Plain text:  {pbkdf2.PlainText}");
+            Console.WriteLine($"  Hashed text: {hashedText}");
 
-            string hashedText = pbkdf2.Compute();
-            Console.WriteLine($"Hashed Text: {hashedText}");
+            Console.WriteLine("\nExample 2: calling Compute(textToHash)");
+            pbkdf2 = new Pbkdf2();
+            hashedText = pbkdf2.Compute("Example 2");
+            Console.WriteLine($"  Plain text:  {pbkdf2.PlainText}");
+            Console.WriteLine($"  Hashed text: {hashedText}");
 
-            return 0;
+            Console.WriteLine("\nExample 3: calling Compute(textToHash, salt)");
+            pbkdf2 = new Pbkdf2();
+            hashedText = pbkdf2.Compute("Example 3", SALT);
+            Console.WriteLine($"  Plain text:  {pbkdf2.PlainText}");
+            Console.WriteLine($"  Salt:        {SALT}");
+            Console.WriteLine($"  Hashed text: {hashedText}");
+
+            Console.WriteLine("\nExample 4: calling Compute(textToHash, saltSize, hashIterations)");
+            pbkdf2 = new Pbkdf2();
+            hashedText = pbkdf2.Compute("Example 4", SALT_SIZE, HASH_ITERATIONS);
+            Console.WriteLine($"  Plain text:  {pbkdf2.PlainText}");
+            Console.WriteLine($"  Salt size:   {SALT_SIZE}");
+            Console.WriteLine($"  Iterations:  {HASH_ITERATIONS}");
+            Console.WriteLine($"  Hashed text: {hashedText}");
+
+            Console.WriteLine("\nPress any key to continue...");
+            Console.Read();
         }
     }
 }
