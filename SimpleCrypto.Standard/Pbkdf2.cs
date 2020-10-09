@@ -104,16 +104,12 @@ namespace SimpleCrypto.Standard
         [MethodImpl(MethodImplOptions.NoOptimization)]
         public bool Compare(string passwordHash1, string passwordHash2)
         {
-            if (string.IsNullOrEmpty(passwordHash1) || string.IsNullOrEmpty(passwordHash2))
+            if (passwordHash1?.Length != passwordHash2?.Length)
                 return false;
 
-            if (passwordHash1.Length != passwordHash2.Length)
-                return false;
-
-            
             int result = 0;
 
-            for (int i = 0; i < passwordHash1.Length; i++)
+            for (int i = 0; i < (passwordHash1?.Length ?? 0); i++)
                 result |= passwordHash1[i] ^ passwordHash2[i];
 
             return 0 == result;
