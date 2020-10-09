@@ -3,47 +3,61 @@ using SimpleCrypto.Standard;
 
 namespace SimpleCrypto.ConsoleSample
 {
-
     public class Program
     {
         public static void Main(string[] args)
         {
-            const string SALT = "987654.Random";
-            const int SALT_SIZE = 13;
-            const int HASH_ITERATIONS = 123456;
+            var pbkdf2 = new Pbkdf2();
+            
+            Console.WriteLine("Welcome! First you need to register...");
+            Console.Write("  Username: ");
+            string storedUsername = Console.ReadLine();
 
-            Pbkdf2 pbkdf2;
-            string hashedText;
+            Console.Write("  Password: ");
+            string passwordPlaintext = ReadPassword();
+            string storedPasswordHash = pbkdf2.Compute(passwordPlaintext);
 
-            Console.WriteLine("Example 1: calling Compute()");
-            pbkdf2 = new Pbkdf2 { PlainText = "Example 1"};
-            hashedText = pbkdf2.Compute();
-            Console.WriteLine($"  Plain text:  {pbkdf2.PlainText}");
-            Console.WriteLine($"  Hashed text: {hashedText}");
+            Console.WriteLine("\nThank you for registering, you can now login below...");
+            Console.Write("  Username: ");
+            string username = Console.ReadLine();
 
-            Console.WriteLine("\nExample 2: calling Compute(textToHash)");
-            pbkdf2 = new Pbkdf2();
-            hashedText = pbkdf2.Compute("Example 2");
-            Console.WriteLine($"  Plain text:  {pbkdf2.PlainText}");
-            Console.WriteLine($"  Hashed text: {hashedText}");
+            Console.Write("  Password: ");
+            string password = ReadPassword();
+            
+            string passwordHash = pbkdf2.Compute(password);
 
-            Console.WriteLine("\nExample 3: calling Compute(textToHash, salt)");
-            pbkdf2 = new Pbkdf2();
-            hashedText = pbkdf2.Compute("Example 3", SALT);
-            Console.WriteLine($"  Plain text:  {pbkdf2.PlainText}");
-            Console.WriteLine($"  Salt:        {SALT}");
-            Console.WriteLine($"  Hashed text: {hashedText}");
-
-            Console.WriteLine("\nExample 4: calling Compute(textToHash, saltSize, hashIterations)");
-            pbkdf2 = new Pbkdf2();
-            hashedText = pbkdf2.Compute("Example 4", SALT_SIZE, HASH_ITERATIONS);
-            Console.WriteLine($"  Plain text:  {pbkdf2.PlainText}");
-            Console.WriteLine($"  Salt size:   {SALT_SIZE}");
-            Console.WriteLine($"  Iterations:  {HASH_ITERATIONS}");
-            Console.WriteLine($"  Hashed text: {hashedText}");
+            if (storedUsername == username && pbkdf2.Compare(storedPasswordHash, passwordHash))
+            {
+                Console.WriteLine("\nLogin was successful!");
+            }
+            else
+            {
+                Console.WriteLine("\nLogin failed");
+            }
 
             Console.WriteLine("\nPress any key to continue...");
             Console.Read();
+        }
+
+        private static string ReadPassword()
+        {
+            string password = "";
+            ConsoleKeyInfo keyInfo;
+
+            do
+            {
+                keyInfo = Console.ReadKey(true);
+                
+                if (keyInfo.Key != ConsoleKey.Enter)
+                {
+                    password += keyInfo.KeyChar;
+                    Console.Write("*");
+                }
+            }
+            while (keyInfo.Key != ConsoleKey.Enter);
+
+            Console.WriteLine("");
+            return password;
         }
     }
 }
