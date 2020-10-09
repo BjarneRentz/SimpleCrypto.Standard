@@ -56,6 +56,7 @@ namespace SimpleCrypto.Tests
             
             Assert.AreEqual(result, pbkdf2.HashedText);
         }
+
         /// <summary>
         /// Ensures a <see cref="FormatException"/> gets thrown when the format of the given salt is invalid.
         /// </summary>
@@ -68,6 +69,61 @@ namespace SimpleCrypto.Tests
             pbkdf2.Compute();
             
             Assert.Fail();
+        }
+
+
+        [TestMethod]
+        public void ComputeWithArgs_PlainText_Ok()
+        {
+            const string PLAIN_TEXT = "Test";
+            
+            var pbkdf2 = new Pbkdf2();
+
+            var result = pbkdf2.Compute(PLAIN_TEXT);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(PLAIN_TEXT, pbkdf2.PlainText);
+            Assert.IsNotNull(pbkdf2.HashedText);
+
+            Assert.AreEqual(result, pbkdf2.HashedText);
+        }
+
+        [TestMethod]
+        public void ComputeWithArgs_PlainText_Salt_Ok()
+        {
+            const string PLAIN_TEXT = "Test";
+            const string SALT = "100000.Random";
+
+            var pbkdf2 = new Pbkdf2();
+
+            var result = pbkdf2.Compute(PLAIN_TEXT, SALT);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(PLAIN_TEXT, pbkdf2.PlainText);
+            Assert.AreEqual(SALT, pbkdf2.Salt);
+            Assert.IsNotNull(pbkdf2.HashedText);
+
+            Assert.AreEqual(result, pbkdf2.HashedText);
+        }
+
+        [TestMethod]
+        public void ComputeWithArgs_PlainText_SaltSize_Iterations_Ok()
+        {
+            const string PLAIN_TEXT = "Test";
+            const int SALT_SIZE = 13;
+            const int ITERATIONS = 123456;
+
+            var pbkdf2 = new Pbkdf2();
+
+            var result = pbkdf2.Compute(PLAIN_TEXT, SALT_SIZE, ITERATIONS);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(PLAIN_TEXT, pbkdf2.PlainText);
+            Assert.AreEqual(SALT_SIZE, pbkdf2.SaltSize);
+            Assert.AreEqual(ITERATIONS, pbkdf2.HashIterations);
+            Assert.IsNotNull(pbkdf2.HashedText);
+
+            Assert.AreEqual(result, pbkdf2.HashedText);
         }
         
         [DataTestMethod]
@@ -98,6 +154,7 @@ namespace SimpleCrypto.Tests
             var result = pbkdf2.Compare(passwordHash1, passwordHash2);
 
             Assert.IsFalse(result);
+
         }
 
         #endregion
