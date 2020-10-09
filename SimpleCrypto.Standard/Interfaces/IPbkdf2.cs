@@ -33,6 +33,11 @@ namespace SimpleCrypto.Standard.Interfaces
         string Salt { get; set; }
         
         /// <summary>
+        /// The size of <see cref="HashedText"/>
+        /// </summary>
+        int HashSize { get; set; }
+        
+        /// <summary>
         /// Computes the hash and saves it in <see cref="HashedText"/>. If no <see cref="Salt"/> is set, it will generate it.
         /// </summary>
         /// <returns>The computed hash.</returns>
