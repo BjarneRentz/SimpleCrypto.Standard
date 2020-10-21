@@ -70,12 +70,13 @@ namespace SimpleCrypto.Standard
         {
             if (SaltSize<1)
                 throw new InvalidOperationException("Salt has to greater than 1!");
-            var rng = RandomNumberGenerator.Create();
-
-            var randomBytes = new Byte[SaltSize];
             
-            rng.GetBytes(randomBytes);
-
+            var randomBytes = new Byte[SaltSize];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomBytes);
+            }
+            
             Salt = $"{HashIterations}.{Convert.ToBase64String(randomBytes)}";
             return Salt;
         }
