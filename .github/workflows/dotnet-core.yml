@@ -1,4 +1,4 @@
-name: .NET Core
+name: SimpleCrypto.Standard CI
 
 on:
   push:
