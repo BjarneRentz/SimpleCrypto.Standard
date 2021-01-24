@@ -15,7 +15,7 @@ namespace SimpleCrypto.Standard
         public Pbkdf2()
         {
             this.SaltSize = 16;
-            this.HashIterations = 400000;
+            this.HashIterations = 100000;
             this.HashSize = 20;
         }
 
