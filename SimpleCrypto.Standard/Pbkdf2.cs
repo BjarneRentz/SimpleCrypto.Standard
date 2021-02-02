@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using SimpleCrypto.Standard.Exceptions;
 using SimpleCrypto.Standard.Interfaces;
 
 namespace SimpleCrypto.Standard
@@ -136,6 +137,28 @@ namespace SimpleCrypto.Standard
             {
                 throw new FormatException("The salt was not in an expected format of {int}.{string}");
             }
+        }
+
+
+        /// <summary>
+        /// Checks the conditions to throw a <see cref="InsecureOperationException"/>. 
+        /// </summary>
+        /// <exception cref="InsecureOperationException"></exception>
+        private void CheckConditions()
+        {
+            string message = null;
+
+            if (SaltSize < 8)
+                message = "Salt size should be at least 8 Bytes!";
+            if (HashSize > 20)
+                message = "Hash size should not be greater than the output size of the used HMAC!";
+            if (HashSize <= SaltSize)
+                message = "Hash size should be greater than the size of the Salt!";
+            if (HashIterations < 10000)
+                message = "Iterations should be at least 10 000!";
+            
+            if (message !=null)
+                throw new InsecureOperationException(message);
         }
     }
 }
