@@ -2,6 +2,7 @@ using System;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleCrypto.Standard;
+using SimpleCrypto.Standard.Exceptions;
 
 namespace SimpleCrypto.Tests
 {
@@ -156,6 +157,49 @@ namespace SimpleCrypto.Tests
 
             Assert.IsFalse(result);
 
+        }
+
+        #endregion
+
+        #region [ Compute Check Conditions ]
+
+        [TestMethod]
+        [ExpectedExceptionMessage(typeof(InsecureOperationException), InsecureMessages.SALT_TO_SHORT)]
+        public void Compute_SaltTooShort()
+        {
+            var pbkdf2 = new Pbkdf2{PlainText = "TestPlainText", SaltSize = 7};
+            var hash = pbkdf2.Compute();
+            Assert.Fail();
+        }
+        
+        
+        [TestMethod]
+        [ExpectedExceptionMessage(typeof(InsecureOperationException), InsecureMessages.NOT_ENOUGH_ITERATIONS)]
+        public void Compute_NotEnoughIterations()
+        {
+            var pbkdf2 = new Pbkdf2{PlainText = "TestPlainText", HashIterations = 9999};
+            var hash = pbkdf2.Compute();
+            Assert.Fail();
+        }
+        
+        
+        [TestMethod]
+        [ExpectedExceptionMessage(typeof(InsecureOperationException), InsecureMessages.HASH_SIZE_TO_SMALL)]
+        public void Compute_HashSizeToSmall()
+        {
+            var pbkdf2 = new Pbkdf2{PlainText = "TestPlainText", HashSize = 7};
+            var hash = pbkdf2.Compute();
+            Assert.Fail();
+        }
+        
+        
+        [TestMethod]
+        [ExpectedExceptionMessage(typeof(InsecureOperationException), InsecureMessages.HASH_SIZE_TO_BIG)]
+        public void Compute_HashSizeToBig()
+        {
+            var pbkdf2 = new Pbkdf2{PlainText = "TestPlainText", HashSize = 21};
+            var hash = pbkdf2.Compute();
+            Assert.Fail();
         }
 
         #endregion
