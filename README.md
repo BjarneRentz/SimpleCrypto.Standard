@@ -18,7 +18,7 @@ If you prefer to user the .NET CLI use
 # Requirements
 
 Version `0.2.x` requires Net Standard 2.0. Future versions require Net Standard 2.1
-
+Version `0.2.1` introduces the `InsecureOperationException`. This could potentially make usage complicated when until now an insecure configuration was used.
 # Usage
 You can find a basic example in the `SimpleCrypto.ConsoleSample` Project.
 
@@ -48,3 +48,7 @@ For example: Compute the Hash with a Saltsize of 18 and an Iterationcount of 200
 ```csharp
 string hash = pbkdf2.Compute("TextTohash", 18, 200000)
 ```
+
+## The `InsecureConfigurationException`
+This exception will be thrown when the `Compute` method gets  called with insecure conditions.
+The message contains further information what configuration exactly caused the exception

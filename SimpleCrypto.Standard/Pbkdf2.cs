@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using SimpleCrypto.Standard.Exceptions;
 using SimpleCrypto.Standard.Interfaces;
 
 namespace SimpleCrypto.Standard
@@ -29,6 +30,7 @@ namespace SimpleCrypto.Standard
         
         public string Compute()
         {
+            CheckConditions();
             if(String.IsNullOrEmpty(PlainText))
                 throw new InvalidOperationException("Plaintext can´t be empty.");
             if (String.IsNullOrEmpty(Salt))
@@ -136,6 +138,32 @@ namespace SimpleCrypto.Standard
             {
                 throw new FormatException("The salt was not in an expected format of {int}.{string}");
             }
+        }
+
+
+        /// <summary>
+        /// Checks the conditions to throw a <see cref="InsecureOperationException"/>. 
+        /// </summary>
+        /// <exception cref="InsecureOperationException"></exception>
+        /// <remarks>
+        /// Salt size should be at least 8 Bytes, and the Hash size not greater than the output of the used HMAC.
+        /// Has size should not be smaller than the Salt size and the minimum hash iterations of 10 000 should not get undercutted.
+        /// </remarks>
+        private void CheckConditions()
+        {
+            string message = null;
+
+            if (SaltSize < 8)
+                message = InsecureMessages.SALT_TO_SHORT;
+            if (HashSize > 20)
+                message = InsecureMessages.HASH_SIZE_TO_BIG;
+            if (HashSize <= SaltSize)
+                message = InsecureMessages.HASH_SIZE_TO_SMALL;
+            if (HashIterations < 10000)
+                message = InsecureMessages.NOT_ENOUGH_ITERATIONS;
+            
+            if (message !=null)
+                throw new InsecureOperationException(message);
         }
     }
 }

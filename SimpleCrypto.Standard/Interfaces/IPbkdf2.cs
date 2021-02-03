@@ -1,4 +1,6 @@
 ﻿using System;
+using SimpleCrypto.Standard.Exceptions;
+
 namespace SimpleCrypto.Standard.Interfaces
 {
 
@@ -42,6 +44,7 @@ namespace SimpleCrypto.Standard.Interfaces
         /// </summary>
         /// <returns>The computed hash.</returns>
         /// <exception cref="InvalidOperationException">Gets thrown when the <see cref="PlainText"/> is not set (null or empty).</exception>
+        /// <exception cref="InsecureOperationException">Gets thrown when insecure conditions are set at the time of computing the hash.</exception>
         string Compute();
 
         /// <summary>
