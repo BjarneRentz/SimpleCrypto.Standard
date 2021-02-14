@@ -39,7 +39,7 @@ namespace SimpleCrypto.Standard.Interfaces
         string HashedText { get; }
 
         /// <summary>
-        /// Salt that will be used for computing the <see cref="HashedText"/>. This contains both Salt and HashIterations separated by a dot.
+        /// Salt that will be used for computing the <see cref="HashedText"/>. This contains Salt, HashIterations and used Hmac separated by a dot.
         /// </summary>
         string Salt { get; set; }
         

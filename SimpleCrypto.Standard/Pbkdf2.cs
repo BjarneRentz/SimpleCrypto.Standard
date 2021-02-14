@@ -39,7 +39,7 @@ namespace SimpleCrypto.Standard
             if (String.IsNullOrEmpty(Salt))
                 GenerateSalt();
             
-            ExtractHashIteration();
+            ExtractHashIterationAndHmac();
             
             byte[] saltBytes = Encoding.UTF8.GetBytes(Salt);
 
@@ -84,7 +84,7 @@ namespace SimpleCrypto.Standard
                 rng.GetBytes(randomBytes);
             }
             
-            Salt = $"{HashIterations}.{Convert.ToBase64String(randomBytes)}";
+            Salt = $"{HashAlgorithm.Name}.{HashIterations}.{Convert.ToBase64String(randomBytes)}";
             return Salt;
         }
 
@@ -126,20 +126,21 @@ namespace SimpleCrypto.Standard
         /// Extracts the hash iterations from the salt.
         /// </summary>
         /// <exception cref="FormatException">Salt has not the format {int}.{string}</exception>
-        private void ExtractHashIteration()
+        private void ExtractHashIterationAndHmac()
         {
             try
             {
-                //get the position of the . that splits the string
-                var i = Salt.IndexOf('.');
+                var content = Salt.Split('.');
+                
 
                 //Get the hash iteration from the first index
-                HashIterations = int.Parse(Salt.Substring(0, i), System.Globalization.NumberStyles.Number);
+                HashIterations = int.Parse(content[1], System.Globalization.NumberStyles.Number);
+                HashAlgorithm = new HashAlgorithmName(content[0]);
 
             }
             catch (Exception)
             {
-                throw new FormatException("The salt was not in an expected format of {int}.{string}");
+                throw new FormatException("The salt was not in an expected format of {string}.{int}.{string}");
             }
         }
 
@@ -163,7 +164,7 @@ namespace SimpleCrypto.Standard
                 message = InsecureMessages.SALT_TO_SHORT;
             if (HashSize > GetHmacSize())
                 message = InsecureMessages.HASH_SIZE_TO_BIG;
-            if (HashSize <= SaltSize)
+            if (HashSize < SaltSize)
                 message = InsecureMessages.HASH_SIZE_TO_SMALL;
             if (HashIterations < 10000)
                 message = InsecureMessages.NOT_ENOUGH_ITERATIONS;

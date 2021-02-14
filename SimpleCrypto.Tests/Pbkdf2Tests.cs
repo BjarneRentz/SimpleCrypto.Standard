@@ -15,7 +15,7 @@ namespace SimpleCrypto.Tests
         [TestMethod]
         public void Compute_Ok()
         {
-            var pbkdf2 = new Pbkdf2 {PlainText = "Test", Salt = "100000.Random"};
+            var pbkdf2 = new Pbkdf2 {PlainText = "Test", Salt = "SHA512.100000.Random"};
 
             var result = pbkdf2.Compute();
             
@@ -34,7 +34,7 @@ namespace SimpleCrypto.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void Compute_PlainTextIsEmpty()
         {
-            var pbkdf2 = new Pbkdf2 {Salt = "100000.Random"};
+            var pbkdf2 = new Pbkdf2 {Salt = "SHA512.100000.Random"};
 
             pbkdf2.Compute();
             
@@ -94,7 +94,7 @@ namespace SimpleCrypto.Tests
         public void ComputeWithArgs_PlainText_Salt_Ok()
         {
             const string PLAIN_TEXT = "Test";
-            const string SALT = "100000.Random";
+            const string SALT = "SHA512.100000.Random";
 
             var pbkdf2 = new Pbkdf2();
 
@@ -197,7 +197,7 @@ namespace SimpleCrypto.Tests
         [ExpectedExceptionMessage(typeof(InsecureOperationException), InsecureMessages.HASH_SIZE_TO_BIG)]
         public void Compute_HashSizeToBig()
         {
-            var pbkdf2 = new Pbkdf2{PlainText = "TestPlainText", HashSize = 21};
+            var pbkdf2 = new Pbkdf2{PlainText = "TestPlainText", HashSize = 65};
             var hash = pbkdf2.Compute();
             Assert.Fail();
         }
@@ -209,12 +209,13 @@ namespace SimpleCrypto.Tests
         [TestMethod]
         public void GenerateSalt_Ok()
         {
-            var pbkdf2 = new Pbkdf2 {PlainText = "Test", Salt = "100A00.Random"};
+            var pbkdf2 = new Pbkdf2 {PlainText = "Test"};
 
             var salt = pbkdf2.GenerateSalt();
 
             Assert.AreEqual(pbkdf2.Salt, salt);
-            Assert.IsTrue(new Regex($@"^{pbkdf2.HashIterations}\..+$").IsMatch(salt));
+            var saltContent = pbkdf2.Salt.Split('.');
+            Assert.IsTrue(saltContent.Length == 3);
         }
 
         /// <summary>
@@ -240,11 +241,16 @@ namespace SimpleCrypto.Tests
             var pbkdf2 = new Pbkdf2 {PlainText = "Test"};
 
             var salt = pbkdf2.GenerateSalt(42, 16);
+
+            var saltConent = salt.Split('.');
             
             Assert.AreEqual(42, pbkdf2.HashIterations);
             Assert.AreEqual(16, pbkdf2.SaltSize);
             Assert.AreEqual(pbkdf2.Salt, salt);
-            Assert.IsTrue(new Regex(@"^42\.").IsMatch(salt));
+            
+            Assert.IsTrue(saltConent.Length == 3);
+            Assert.IsTrue(saltConent[1] == "42");
+            
         }
         
         #endregion
