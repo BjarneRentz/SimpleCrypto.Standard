@@ -15,13 +15,16 @@ namespace SimpleCrypto.Standard
     {
         public Pbkdf2()
         {
-            this.SaltSize = 16;
+            this.SaltSize = 64;
             this.HashIterations = 100000;
-            this.HashSize = 20;
+            this.HashSize = 64;
+            this.HashAlgorithm = HashAlgorithmName.SHA512;
         }
 
         
         public int HashIterations { get; set; }
+        
+        public HashAlgorithmName HashAlgorithm { get; set; }
         public int SaltSize { get; set; }
         public string PlainText { get; set; }
         public string HashedText { get; private set; }
@@ -147,15 +150,18 @@ namespace SimpleCrypto.Standard
         /// <exception cref="InsecureOperationException"></exception>
         /// <remarks>
         /// Salt size should be at least 8 Bytes, and the Hash size not greater than the output of the used HMAC.
-        /// Has size should not be smaller than the Salt size and the minimum hash iterations of 10 000 should not get undercutted.
+        /// Hash size should not be smaller than the Salt size and the minimum hash iterations of 10 000 should not get undercutted.
+        /// Also MD5 should never be used as the HMAC.
         /// </remarks>
         private void CheckConditions()
         {
             string message = null;
 
+            if (HashAlgorithm.Equals(HashAlgorithmName.MD5))
+                message = InsecureMessages.INSECURE_HMAC(HashAlgorithm.Name);
             if (SaltSize < 8)
                 message = InsecureMessages.SALT_TO_SHORT;
-            if (HashSize > 20)
+            if (HashSize > GetHmacSize())
                 message = InsecureMessages.HASH_SIZE_TO_BIG;
             if (HashSize <= SaltSize)
                 message = InsecureMessages.HASH_SIZE_TO_SMALL;
@@ -165,5 +171,25 @@ namespace SimpleCrypto.Standard
             if (message !=null)
                 throw new InsecureOperationException(message);
         }
+
+        /// <summary>
+        /// Returns the output size of the used <see cref="HashAlgorithm"/> in bytes.
+        /// </summary>
+        /// <returns></returns>
+        private int GetHmacSize()
+        {
+            if (HashAlgorithm.Equals(HashAlgorithmName.SHA1))
+                return 20;
+            if (HashAlgorithm.Equals(HashAlgorithmName.SHA256))
+                return 32;
+            if (HashAlgorithm.Equals(HashAlgorithmName.SHA384))
+                return 48;
+            if (HashAlgorithm.Equals(HashAlgorithmName.SHA512))
+                return 64;
+
+            return 0;
+        }
+           
+
     }
 }

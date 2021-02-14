@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using SimpleCrypto.Standard.Exceptions;
 
 namespace SimpleCrypto.Standard.Interfaces
@@ -13,6 +14,14 @@ namespace SimpleCrypto.Standard.Interfaces
         /// Number of hash iterations.
         /// </summary>
         int HashIterations { get; set; }
+
+        /// <summary>
+        /// Name of the hash algorithm that will be used by Pbkdf2DerivedBytes.
+        /// </summary>
+        /// <remarks>
+        ///    To ensure backwards compability with SimpleCrypto.Net set the HashAlgorithm to SHA1 as its the only available hash algorithm in .net standard 2.0
+        /// </remarks>
+        HashAlgorithmName HashAlgorithm { get; set; }
 
         /// <summary>
         /// Size of the <see cref="Salt"/> in Bytes if no salt is set.
